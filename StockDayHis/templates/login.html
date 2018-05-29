@@ -1,0 +1,80 @@
+﻿<!doctype html>
+<html lang="zh">
+<head>
+    <style>
+          img{display:none;}
+    </style>
+    <title>打板成功率统计</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/wd_favicon.ico')}}"/>
+</head>
+<form>  
+    <select name="test" onchange="testimg(this.value)">  
+        <option value="-1">请选择你想看的图表</option>  
+        <option value="0" >涨停数</option>  
+        <option value="1">打板成功率</option>  
+        <option value="2">开板率</option>  
+    </select>  
+</form> 
+
+<body>
+<div class="htmleaf-container">
+    <div class="wrapper">
+        <div class="container">
+            <h1>请输入开始时间和结束时间</h1>
+            <!--<form class="form" method="post" action="/" onsubmit="return doLogin();">-->
+            <form class="form" method="post" action="">
+                <input type="text" placeholder="Start" name="username" id="username">
+                <input type="text" placeholder="End" name="password" id="password">
+                <button type="submit" id="login-button">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+<img id="imgshow" src="../static/1.jpeg" />  
+<script src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }} " type="text/javascript"></script>
+<script>
+    function doLogin() {
+        var login = false;
+        $.ajax({
+            url: '/login',
+            data: "username=" + $("#username").val() + "&password=" + $("#password").val(),
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            async: false,
+            success: function (d) {
+                var status = d.status;
+                if (status != undefined && status != '') {
+                    if (status == "-1") {
+                        alert("认证异常");
+                        login = false;
+                    } else {
+                        login = true;
+                    }
+                } else {
+                    alert("用户名或密码错误！");
+                    login = false;
+                }
+            }
+        });
+        return login;
+    }
+
+</script>
+
+<script type="text/javascript">  
+   var arr=["../static/1.jpeg","../daban.png","../static/3.jpg"];  
+    var imgShow=document.getElementById('imgshow');  
+    function testimg(val){  
+        if(val==-1){  
+            imgShow.style.display="none";  
+        }  
+        else{  
+            imgShow.style.display="block";  
+            imgShow.src=arr[val];  
+        }  
+    }  
+</script>  
+
+</body>
+</html>
