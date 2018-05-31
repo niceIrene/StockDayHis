@@ -70,6 +70,20 @@ def getTimeList(s):
             timelist.append(timeValue)
         return timelist
 
+def lianbanshu(sid, day):
+	num = 0
+	q1 = getpreviousdDay(day)
+	q2 = getpreviousdDay(q1)
+	q3 = getpreviousdDay(q2)
+	if (isZhangTing(day, sid, df)==1):
+		num += 1
+	if(isZhangTing(q1, sid, df) == 1):
+		num += 1
+	if(isZhangTing(q2, sid, df) == 1):
+		num += 1
+	if(isZhangTing(q3, sid, df) == 1):
+		num += 1
+	return num
 
 
 #s1 = '2011-01-04'
@@ -104,31 +118,65 @@ df = df.drop('b',1)
 df_fortime = df_fortime.drop('a',1)
 df_fortime = df_fortime.drop('b',1)
 df_fortime.drop_duplicates(subset = 'time',inplace = True)
-time = df_fortime['time']
-timelist=list(time)
-print timelist
+timetmp = list(df_fortime['time'])
+print timetmp
+index01 = timetmp.index(s1)
+index02 = timetmp.index(s2)
+time = timetmp[index01:index02+1]
+print time
 
+
+timelist=list(time)
+
+
+print "********** TEST LIANBANSHU ********"
+print lianbanshu(1 , ' 2011-01-10 ')
+
+print "********** HUATU *****************"
 count = 0
 y = []
+y2 = []
+mius =0
+zhangting = []
 for str in timelist:
         if str == s1:
-           continue
+           mius +=1
+           #zhangting.append(NumberZhangting(str,df))
+           zhangting.append(10)
         else:
 			count += 1
-			y.append(Daban(str, df))
-x = range(len(timelist))
+                        hit = Daban(str, df)
+			y.append(hit)
+                        y2.append(1-hit)
+                        zhangting.append(NumberZhangting(str,df))
+x = range(len(timelist)-mius)
+x2 = range(len(timelist))
 
-print len(x)
-print len(y)
-
-plt.figure(figsize = (8,4))
-plt.plot(x,y,"b--",linewidth=1)  
+plt.figure(figsize = (10,5))
+plt.plot(x,y,"b--",linewidth=2)
+plt.ylim(-0.1,1)  
 plt.xlabel("date") 
 plt.ylabel("success")  
-#plt.xticks(range(len(timelist)-1), timelist, **kwargs)  # Set locations and labels 
+plt.xticks(range(len(timelist)), timelist,rotation=45)  # Set locations and labels 
 plt.title("daban")
-plt.savefig("daban.png") 
-print "save ok"   
-plt.show()   
+plt.savefig("./static/daban.png") 
+
+plt.figure(figsize = (10,5))
+plt.plot(x2,zhangting,"red",linewidth=2)
+plt.ylim(0,30)  
+plt.xlabel("date") 
+plt.ylabel("number")  
+plt.xticks(range(len(timelist)), timelist,rotation=45)  # Set locations and labels 
+plt.title("number")
+plt.savefig("./static/zhangting.png") 
+
+plt.figure(figsize = (10,5))
+plt.plot(x,y2,"b--",linewidth=2)
+plt.ylim(-0.1,1.1)  
+plt.xlabel("date") 
+plt.ylabel("./static/kaiban")  
+plt.xticks(range(len(timelist)), timelist,rotation=45)  # Set locations and labels 
+plt.title("kaiban")
+plt.savefig("./static/kaiban.png")  
 
 
